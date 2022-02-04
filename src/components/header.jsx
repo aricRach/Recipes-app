@@ -15,7 +15,7 @@ const Header = props => {
     <div>
      <nav className="navbar navbar-expand navbar-dark bg-dark align-user-to-right">
         <Link to={"/recipes"} className="navbar-brand ml-auto main-logo">
-        recipes Reviews
+        Recipes
         </Link>
         <div className="navbar-nav ml-auto">
         <li className="nav-item" >
