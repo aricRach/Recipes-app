@@ -110,6 +110,7 @@ button {
 }
 
 .results {
+  direction: RTL;
   margin: 14px 0px;
   position: relative !important;
   left: 25%;
@@ -132,6 +133,7 @@ label {
 
 .instructions-text {
   white-space: pre-line;
+  direction: RTL;
 }
 
 .like-btn {
@@ -206,4 +208,12 @@ label {
 
 .checked {
   text-decoration-line: line-through;
+}
+
+@media only screen and (max-width: 800px) {
+  ul {
+    columns: 1;
+    -webkit-columns: 1;
+    -moz-columns: 1;
+  }
 }
