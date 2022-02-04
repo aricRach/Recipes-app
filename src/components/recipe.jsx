@@ -94,6 +94,11 @@ const Recipe = props => {
        });
   }
 
+  const ingredientChecked = (index) => {
+    const element = document.getElementById(index);
+    element.classList.toggle("checked");
+  }
+
   if(isLoading) return (    
       <Loader/>
    )
@@ -107,7 +112,7 @@ const Recipe = props => {
           </p>
           <div className="items-in-row align-center">
             <strong>Cuisine: </strong> {recipe.cuisine}<br/>
-          {recipesContext && recipesContext.id !== recipe.userId &&
+          {recipesContext.user && recipesContext.user.id !== recipe.userId &&
               <div> 
                 {user.favorites.map(fav => fav.$oid).indexOf(recipeIdParam) === -1 ?
                                 <div className="like-btn" onClick={onAddToFavoritesClick}><FcLikePlaceholder/></div> : 
@@ -121,9 +126,9 @@ const Recipe = props => {
                        <h4>ingrediens</h4>
              <div className="results"> 
             <ul>
-              {recipe.ingrediens.map((item) => (
+              {recipe.ingrediens.map((item, index) => (
                 <div> 
-                  <li className="ingredient-item">
+                  <li onClick={() => {ingredientChecked(index)}} id={index} className="ingredient-item">
                   {" "}
                   {item}
                   {" "}

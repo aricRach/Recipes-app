@@ -122,6 +122,10 @@ ul {
   -moz-columns: 2;
 }
 
+li {
+  margin-top: 5px;
+}
+
 label {
   margin-top: 10px;
 }
@@ -198,4 +202,8 @@ label {
   background-color: transparent;
   border: none;
   font-size: 20px;
+}
+
+.checked {
+  text-decoration-line: line-through;
 }
