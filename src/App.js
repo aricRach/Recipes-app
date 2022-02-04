@@ -72,7 +72,7 @@ function App() {
             />
           <Route
             path="/recipes/:id/review"
-            element={ !isLogedIn? <Navigate to="/login"/> : <AddReview/>}
+            element={ <AddReview/>}
           />
           <Route
             path="/recipes/:id"
@@ -80,7 +80,7 @@ function App() {
           />
           <Route
             path="/add-recipe"
-            element={ !isLogedIn? <Navigate to="/login"/> : <AddRecipe/>}
+            element={<AddRecipe/>}
           />
           <Route 
             path="/login"
