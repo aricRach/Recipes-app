@@ -54,8 +54,6 @@ function App() {
       setIsFullyLoaded(true);
     });
   },[])
-
-  if(isFullyLoaded) {
     
   return (
     <div>
@@ -94,11 +92,6 @@ function App() {
       </div>
     </div>
   );
-} else{
-  return (
-  <Loader/>
-  )
-}
 }
 
 export default App;
