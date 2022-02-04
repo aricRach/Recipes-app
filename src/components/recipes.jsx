@@ -18,7 +18,6 @@ const Recipes = props => {
       setIsLoading(false);
     } else{
       recipesContext.retrieveRecipes().then(response => {
-        console.log(response.data);
         recipesContext.setRecipes(response.data.recipes);
         setIsLoading(false);
       })
@@ -44,7 +43,6 @@ const Recipes = props => {
   const findByName = () => {
     setIsLoading(true);
     recipesContext.findByName().then(response => {
-        console.log(response.data);
         recipesContext.setRecipes(response.data.recipes);
         setIsLoading(false);
       })
@@ -56,7 +54,6 @@ const Recipes = props => {
   const findByCuisine = () => {
     setIsLoading(true);
     recipesContext.findByCuisine().then(response => {
-      console.log(response.data);
       recipesContext.setRecipes(response.data.recipes);
       setIsLoading(false);
     }) 

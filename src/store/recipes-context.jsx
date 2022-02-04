@@ -59,7 +59,6 @@ const navigate = useNavigate();
   const signUp = async (user = null) => {
     try {
       const loggedUser = await RecipesDataService.createUser(user);
-      console.log(loggedUser.data);
       setUser(user);
       Cookies.set('login', loggedUser.data._id.$oid, { expires: 1 });
     } catch(e) {
@@ -70,7 +69,6 @@ const navigate = useNavigate();
   const login = async (user = null) => {
     try {
       const loggedUser = await RecipesDataService.loginUser(user);
-      console.log(loggedUser.data);
       user['name'] = loggedUser.data.name;
       setUser(user);
       Cookies.set('login', loggedUser.data._id.$oid, { expires: 1 });
@@ -103,7 +101,6 @@ const navigate = useNavigate();
   const retrieveCuisines = () => {
     RecipesDataService.getCuisines()
       .then(response => {
-        console.log(response.data);
         setCuisines(["All Cuisines"].concat(response.data));
         
       })

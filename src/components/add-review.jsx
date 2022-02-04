@@ -9,7 +9,6 @@ const AddReview = props => {
   const location = useLocation();
   let params = useParams();
   const recipeIdParam = params.id;
-  console.log(recipeIdParam);
   const recipesContext = useContext(RecipesContext);
 
 
@@ -29,7 +28,6 @@ const AddReview = props => {
     setReview(event.target.value);
   };
 
-  console.log(recipeIdParam);
   const saveReview = () => {
     var data = {
       text: review,
@@ -44,7 +42,6 @@ const AddReview = props => {
       RecipesDataService.updateReview(data)
         .then(response => {
           setSubmitted(true);
-          console.log(response.data);
         })
         .catch(e => {
           console.log(e);
@@ -53,7 +50,6 @@ const AddReview = props => {
         RecipesDataService.createReview(data)
         .then(response => {
           setSubmitted(true);
-          console.log(response.data);
         })
         .catch(e => {
           console.log(e);

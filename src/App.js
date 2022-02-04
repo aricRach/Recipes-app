@@ -51,7 +51,6 @@ function App() {
   useEffect(()=>{
     recipesContext.readCookie().then((res) => {
       setIsLogedIn(res);
-      console.log(res);
       setIsFullyLoaded(true);
     });
   },[])
