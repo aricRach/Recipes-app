@@ -125,7 +125,7 @@ const AddRecipe = props => {
                     <label htmlFor="ingrediens">Ingrediens</label>
                     <div className="input-group col-lg-4">
                     <input className="form-control" id="ingrediens"
-                    maxLength="20"
+                    maxLength="30"
                       type="text" ref={inputIngrediens}
                       placeholder="Enter your ingrediens"
                       name="ingrediens"
