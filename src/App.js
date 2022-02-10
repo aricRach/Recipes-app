@@ -54,6 +54,8 @@ function App() {
       setIsFullyLoaded(true);
     });
   },[])
+
+  if(isFullyLoaded) {
     
   return (
     <div>
@@ -78,7 +80,7 @@ function App() {
           />
           <Route
             path="/add-recipe"
-            element={<AddRecipe/>}
+            element={ !isLogedIn? <Navigate to="/"/> :<AddRecipe/>}
           />
           <Route 
             path="/login"
@@ -92,6 +94,11 @@ function App() {
       </div>
     </div>
   );
+} else{
+  return (
+  <Loader/>
+  )
+}
 }
 
 export default App;
