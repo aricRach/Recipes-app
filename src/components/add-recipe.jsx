@@ -9,8 +9,6 @@ import { FcPlus } from "react-icons/fc";
 
 const AddRecipe = props => {
 
-    const location = useLocation();
-
     let initialRecipeState = {
         name: '',
         ingrediens: [],
@@ -19,8 +17,13 @@ const AddRecipe = props => {
         difficulty: '',
         image: '',
     }
+    let editing = false;
+
+    const location = useLocation();
     const inputIngrediens = useRef(null);
     const recipesContext = useContext(RecipesContext);
+    const [recipe, setRecipe] = useState(initialRecipeState);
+    const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
       recipesContext.readCookie();
@@ -28,13 +31,13 @@ const AddRecipe = props => {
 
     const handleAddIngredients = () => {
       if(inputIngrediens.current.value != "") {
-          setUser({...user, ingrediens: [...user.ingrediens, inputIngrediens.current.value]});
+        setRecipe({...recipe, ingrediens: [...recipe.ingrediens, inputIngrediens.current.value]});
       }
       inputIngrediens.current.value = "";
     }
     const deleteIngredient = (item) => {
-      const filteredIngredients = user.ingrediens.filter(currentIngredient => currentIngredient != item);
-      setUser({...user, ingrediens: [...filteredIngredients]});
+      const filteredIngredients = recipe.ingrediens.filter(currentIngredient => currentIngredient != item);
+      setRecipe({...recipe, ingrediens: [...filteredIngredients]});
   }
     const handleKeypress = e => {
       if (e.charCode === 13) {
@@ -43,48 +46,41 @@ const AddRecipe = props => {
       }
     };
   
-
-    let editing = false;
-
     if (location.state && location.state.currentRecipe) {
         editing = true;
         initialRecipeState = location.state.currentRecipe
       }
 
-    const [user, setUser] = useState(initialRecipeState);
-      
-    const [submitted, setSubmitted] = useState(false);
-
     const nameChangeHandler = (event) => {
-        setUser({...user, name: event.target.value});
+      setRecipe({...recipe, name: event.target.value});
     }
 
       const instructionsChangeHandler = (event) => {
-        setUser({...user, instructions: event.target.value});
+        setRecipe({...recipe, instructions: event.target.value});
     }
 
     const cuisineChangeHandler = (event) => {
-        setUser({...user, cuisine: event.target.value});
+      setRecipe({...recipe, cuisine: event.target.value});
     }
 
     const difficultyChangeHandler = (event) => {
-        setUser({...user, difficulty: event.target.value});
+      setRecipe({...recipe, difficulty: event.target.value});
     }
 
     const setImage = (img) => {
-        setUser({...user, image: img});
+      setRecipe({...recipe, image: img});
     }
 
     const onSaveClick = async (event) => {
         event.preventDefault(); // prevent reload the page
         var data = {
-            name: user.name,
-            ingrediens: user.ingrediens,
-            instructions: user.instructions,
-            cuisine: user.cuisine,
-            difficulty: user.difficulty || '1',
+            name: recipe.name,
+            ingrediens: recipe.ingrediens,
+            instructions: recipe.instructions,
+            cuisine: recipe.cuisine,
+            difficulty: recipe.difficulty || '1',
             userId: recipesContext.user?.id || '1234',
-            image: user.image || '',
+            image: recipe.image || '',
             recipeId: ''
           };
 
@@ -138,7 +134,7 @@ const AddRecipe = props => {
 
              <div className="results"> 
             <ul>
-              {user.ingrediens.map((item) => (
+              {recipe.ingrediens.map((item) => (
                 <div> 
                   <li className="ingredient-item">
                   {" "}
@@ -175,7 +171,7 @@ const AddRecipe = props => {
                     multiple={false}
                     onDone={({base64}) => setImage(base64)}/>
                     <p>
-                    <img src={user.image} className="img-thumbnail" style={{"max-height": "350px"}} />
+                    <img src={recipe.image} className="img-thumbnail" style={{"max-height": "350px"}} />
                     </p>
                     </div>
 

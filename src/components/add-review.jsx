@@ -62,10 +62,8 @@ const AddReview = props => {
     <div>
       {recipesContext.user ? (
       <div className="submit-form">
-        {submitted ? (
-          <div>
+        {submitted || !recipesContext.user ? (
             <Navigate to={"/recipes/" + recipeIdParam} />
-          </div>
         ) : (
           <div>
             <label htmlFor="description">{ editing ? "Edit" : "Create" } Review</label>
