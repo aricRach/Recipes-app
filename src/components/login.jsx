@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
-import {UserContext} from '../store/user-context';
 import {RecipesContext} from '../store/recipes-context';
 import { useNavigate } from 'react-router-dom';
+import Auth from "./auth"
 
 const Login = props => {
 
@@ -24,7 +24,6 @@ const Login = props => {
   };
 
   const handlePasswordChange = async event => {
-
     const password = event.target.value;
     setUser({ ...user, password: password });
   };
@@ -40,40 +39,8 @@ const Login = props => {
   }
 
   return (
-    <div className="submit-form">
-      <h1 style={{color: "red"}}>{errorMsg.substring(1, errorMsg.length-1)}</h1>
-
-      <form onSubmit={login} >
-        <label htmlFor="id">email</label>
-        <div className="input-group col-lg-4">
-          <input
-            type="email"
-            className="form-control"
-            id="id"
-            required
-            value={user.id}
-            onChange={handleInputChange}
-            name="id"
-          />
-        </div>
-
-        <label htmlFor="password">password</label>
-        <div className="input-group col-lg-4">
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            required
-            onChange={handlePasswordChange}
-            name="password"
-          />
-        </div>
-
-        <button className="btn btn-success submit-btn">
-          Login
-        </button>
-        </form>
-    </div>
+    <Auth authFun={login} handleInputChange={handleInputChange}
+    handlePasswordChange={handlePasswordChange} authPage="login" errorMsg={errorMsg} ></Auth>
   );
 };
 
