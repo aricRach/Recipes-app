@@ -1,0 +1,3 @@
+recipes deploy 
+git commit -m "my commit"
+git push heroku HEAD:master
