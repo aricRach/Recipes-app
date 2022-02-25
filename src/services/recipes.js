@@ -70,6 +70,10 @@ class RecipesDataService {
   loginUserOid(oid) {
     return http.get(`/user-login-oid?oid=${oid}`);
   }
+
+  updateRating(data) {
+    return http.put("/rating-edit", data);
+  }
 }
 
 export default new RecipesDataService();

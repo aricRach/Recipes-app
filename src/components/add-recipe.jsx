@@ -81,7 +81,14 @@ const AddRecipe = props => {
             difficulty: recipe.difficulty || '1',
             userId: recipesContext.user?.id || '1234',
             image: recipe.image || '',
-            recipeId: ''
+            recipeId: '',
+            rating: {
+              ratingSum: 2,
+              ratingUserCount: 1,
+              mapRating: {
+                'aricrachmany@gmail.com': 2
+              } // will be user: his rating
+            }
           };
 
           if (editing) {
@@ -154,7 +161,7 @@ const AddRecipe = props => {
 
                     <label htmlFor="cuisine">cuisine(will be auto complete from the cuisine list)</label>
                     <div className="input-group col-lg-4">
-                    <input className="form-control" defaultValue={initialRecipeState.cuisine} id="cuisine" type="text" onChange={cuisineChangeHandler} />
+                    <input required className="form-control" defaultValue={initialRecipeState.cuisine} id="cuisine" type="text" onChange={cuisineChangeHandler} />
                     </div>
 
                     <label htmlFor="selectLevel">select level of difficulty</label>
