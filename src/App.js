@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 
 import './App.css';
-import { Route, Link, Navigate } from "react-router-dom";
+import { Route, Navigate } from "react-router-dom";
 import  {useNavigate}  from 'react-router-dom'
 import { Routes } from 'react-router-dom';
 
@@ -17,10 +17,6 @@ import SignUp from "./components/sign-up";
 
 import Header from "./components/header";
 
-
-import { FcBusinessman } from "react-icons/fc";
-import {Dropdown} from 'react-bootstrap';
-import {ButtonGroup} from 'react-bootstrap';
 import {RecipesContext} from './store/recipes-context';
 import Loader from "./components/loader";
 
@@ -80,7 +76,11 @@ function App() {
           />
           <Route
             path="/add-recipe"
-            element={ !isLogedIn? <Navigate to="/"/> :<AddRecipe/>}
+            element={<AddRecipe/>}
+          />
+          <Route
+            path="/recipes/add-recipe"
+            element={<AddRecipe/>}
           />
           <Route 
             path="/login"

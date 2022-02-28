@@ -17,17 +17,22 @@ const AddRecipe = props => {
         difficulty: '',
         image: '',
     }
-    let editing = false;
 
     const location = useLocation();
     const inputIngrediens = useRef(null);
     const recipesContext = useContext(RecipesContext);
     const [recipe, setRecipe] = useState(initialRecipeState);
+    const [editing, setEditing] = useState(false);
     const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
       recipesContext.readCookie();
-    });
+      recipesContext.retrieveCuisines();
+      if (location.state && location.state.currentRecipe) {
+        setEditing(true);
+        setRecipe(location.state.currentRecipe);
+      }
+    }, []);
 
     const handleAddIngredients = () => {
       if(inputIngrediens.current.value != "") {
@@ -45,18 +50,13 @@ const AddRecipe = props => {
         handleAddIngredients();
       }
     };
-  
-    if (location.state && location.state.currentRecipe) {
-        editing = true;
-        initialRecipeState = location.state.currentRecipe
-      }
 
     const nameChangeHandler = (event) => {
       setRecipe({...recipe, name: event.target.value});
     }
 
-      const instructionsChangeHandler = (event) => {
-        setRecipe({...recipe, instructions: event.target.value});
+    const instructionsChangeHandler = (event) => {
+      setRecipe({...recipe, instructions: event.target.value});
     }
 
     const cuisineChangeHandler = (event) => {
@@ -83,11 +83,9 @@ const AddRecipe = props => {
             image: recipe.image || '',
             recipeId: '',
             rating: {
-              ratingSum: 2,
-              ratingUserCount: 1,
-              mapRating: {
-                'aricrachmany@gmail.com': 2
-              } // will be user: his rating
+              ratingSum: 0,
+              ratingUserCount: 0,
+              mapRating: {} 
             }
           };
 
@@ -116,13 +114,13 @@ const AddRecipe = props => {
 
     return (
               <div className="form-group">
-                  {submitted ? 
+                  {submitted || !recipesContext.user ? 
                       <Navigate to="/recipes" />
                    : (
                 <form onSubmit={onSaveClick} >
                     <label htmlFor="inputName">name</label>
                     <div className="input-group col-lg-4">
-                    <input required className="form-control" defaultValue={initialRecipeState.name} id="inputName" type="text" onChange={nameChangeHandler} />
+                    <input autocomplete="off" required className="form-control" defaultValue={recipe.name} id="inputName" type="text" onChange={nameChangeHandler} />
                     </div>
 
                     <label htmlFor="ingrediens">Ingrediens</label>
@@ -156,17 +154,24 @@ const AddRecipe = props => {
 
                     <label htmlFor="instructions">Instructions</label>
                     <div className="input-group col-lg-4">
-                    <textarea className="form-control" defaultValue={initialRecipeState.instructions} type="textarea" id="instructions" onChange={instructionsChangeHandler}/>
+                    <textarea className="form-control" defaultValue={recipe.instructions} type="textarea" id="instructions" onChange={instructionsChangeHandler}/>
                     </div>
 
-                    <label htmlFor="cuisine">cuisine(will be auto complete from the cuisine list)</label>
+                    <label htmlFor="cuisine">cuisine(choose from the list or add a new cuisine)</label>
                     <div className="input-group col-lg-4">
-                    <input required className="form-control" defaultValue={initialRecipeState.cuisine} id="cuisine" type="text" onChange={cuisineChangeHandler} />
+                    <input autocomplete="off" required defaultValue={recipe.cuisine} className="form-control" id="cuisine" type="text" onChange={cuisineChangeHandler} list="cuisinesList" />
+                    <datalist id="cuisinesList">
+                    {recipesContext.cuisines.slice(1).map(cuisine => {
+                      return (
+                        <option value={cuisine}> {cuisine.substr(0, 20)} </option>
+                      )
+                    })}
+                    </datalist>
                     </div>
 
                     <label htmlFor="selectLevel">select level of difficulty</label>
                     <div className="input-group col-lg-4">
-                    <select className="form-control" defaultValue={initialRecipeState.difficulty} id="selectLevel" onChange={difficultyChangeHandler}>
+                    <select className="form-control" defaultValue={recipe.difficulty} id="selectLevel" onChange={difficultyChangeHandler}>
                     <option>1</option>
                     <option>2</option>
                     <option>3</option>
