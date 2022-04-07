@@ -6,6 +6,7 @@ import { FaTrash } from "react-icons/fa";
 import {RecipesContext} from '../store/recipes-context';
 import { useLocation } from "react-router-dom";
 import { FcPlus } from "react-icons/fc";
+import Loader from "./loader";
 
 const AddRecipe = props => {
 
@@ -24,6 +25,7 @@ const AddRecipe = props => {
     const [recipe, setRecipe] = useState(initialRecipeState);
     const [editing, setEditing] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [isLoading,setIsLoading] = useState(false)
 
     useEffect(() => {
       recipesContext.readCookie();
@@ -72,6 +74,7 @@ const AddRecipe = props => {
     }
 
     const onSaveClick = async (event) => {
+      setIsLoading(true);
         event.preventDefault(); // prevent reload the page
         var data = {
             name: recipe.name,
@@ -92,9 +95,11 @@ const AddRecipe = props => {
           if (editing) {
             data.recipeId = location.state.currentRecipe._id;
             await RecipesDataService.updateRecipe(data);
+            setIsLoading(false);
             setSubmitted(true);
           } else {
               await RecipesDataService.createRecipe(data)
+              setIsLoading(false);
               setSubmitted(true);
               }
           };
@@ -112,6 +117,9 @@ const AddRecipe = props => {
 
     };
 
+    if(isLoading) return (    
+      <Loader/>
+   )
     return (
               <div className="form-group">
                   {submitted || !recipesContext.user ? 
@@ -120,7 +128,7 @@ const AddRecipe = props => {
                 <form onSubmit={onSaveClick} >
                     <label htmlFor="inputName">name</label>
                     <div className="input-group col-lg-4">
-                    <input autocomplete="off" required className="form-control" defaultValue={recipe.name} id="inputName" type="text" onChange={nameChangeHandler} />
+                    <input maxLength={24} autocomplete="off" required className="form-control" defaultValue={recipe.name} id="inputName" type="text" onChange={nameChangeHandler} />
                     </div>
 
                     <label htmlFor="ingrediens">Ingrediens</label>

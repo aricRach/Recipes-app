@@ -120,7 +120,7 @@ const Recipes = props => {
                   <h6 className="card-subtitle mb-2 text-muted"><strong>Cuisine: </strong>{recipe.cuisine}</h6>
                   <img src={recipe.image || defaultImg.img} className="card-img-top cover-img" />
                   <div>
-                  <Link className="card-link" to={"/recipes/"+ getId(recipe)} className="btn btn-primary col-lg-5 recipe-page-btn">
+                  <Link className="card-link btn btn-primary col-lg-5 recipe-page-btn" to={"/recipes/"+ getId(recipe)}>
                     recipe page
                   </Link>
                   {recipesContext.user && recipesContext.user.id === recipe.userId &&
