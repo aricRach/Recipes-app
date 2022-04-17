@@ -16,6 +16,7 @@ const navigate = useNavigate();
   const [cuisines, setCuisines] = useState(["All Cuisines"]);
   const [searchName, setSearchName ] = useState("");
   const [searchCuisine, setSearchCuisine ] = useState("");
+  const [isLoading,setIsLoading] = useState(true)
 
   // user contex
   const [user, setUser] = useState(null);
@@ -37,24 +38,6 @@ const navigate = useNavigate();
     }
     return Promise.resolve(true);
   }
-
-  // const readCookie2 = async () => {
-  //   const loggedOid = Cookies.get('login');
-  //   if(loggedOid) {
-  //     Cookies.set('login', loggedOid, { expires: 1 });
-  //     if(!user) {
-  //         // need to login
-  //         const currentUser = await RecipesDataService.loginUserOid(loggedOid);
-  //         currentUser.data.id = currentUser.data.userId;
-  //         setUser(currentUser.data);
-  //         return Promise.resolve(true);
-  //     }
-  //   } else {
-  //     setUser(null);
-  //     return Promise.resolve(false);
-  //   }
-  //   return Promise.resolve(true);
-  // }
 
   const signUp = async (user = null) => {
     try {
@@ -84,13 +67,17 @@ const navigate = useNavigate();
   }
 // end user contex
   const searchMyRecipes = () => {
+    setIsLoading(true);
       RecipesDataService.findMyRecipes(user.id, 'id').then(results => {
         setRecipes(results.data.recipes);
+        setIsLoading(false);
       });
   };
-  const searchFavoritesRecipes = () => { // to write
+  const searchFavoritesRecipes = () => {
+    setIsLoading(true);
     RecipesDataService.findFavorites(user.id).then(results => {
       setRecipes(results.data);
+      setIsLoading(false);
     });
 };
 
@@ -102,7 +89,6 @@ const navigate = useNavigate();
     RecipesDataService.getCuisines()
       .then(response => {
         setCuisines(["All Cuisines"].concat(response.data));
-        
       })
       .catch(e => {
         console.log(e);
@@ -128,7 +114,7 @@ const navigate = useNavigate();
   };
 
   const findByCuisine = () => {
-    if (searchCuisine == "All Cuisines") {
+    if (searchCuisine === "All Cuisines") {
       return RecipesDataService.getAll();
     } else {
       const searchThisCuisine = searchCuisine;
@@ -149,6 +135,8 @@ const navigate = useNavigate();
     setSearchNameInput:setSearchNameInput,
     setSearchCuisineInput:setSearchCuisineInput,
     searchFavoritesRecipes: searchFavoritesRecipes,
+    isLoading: isLoading,
+    setIsLoading:setIsLoading,
     //
     user: user,
     login:login,
@@ -158,7 +146,6 @@ const navigate = useNavigate();
 
     //
   }
-
 
     return (
         <RecipesContext.Provider value={contex}>

@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 
 import './App.css';
 import { Route, Navigate } from "react-router-dom";
-import  {useNavigate}  from 'react-router-dom'
 import { Routes } from 'react-router-dom';
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -26,20 +25,7 @@ import Loader from "./components/loader";
 function App() {
 
   const recipesContext = useContext(RecipesContext); 
-  const navigate = useNavigate()
 
-  // const userContext = useContext(UserContext); 
-
-
-  // const [user, setUser] = React.useState(null);
-
-  // async function login(user = null) {
-  //   setUser(user);
-  // }
-
-  // async function logout() {
-  //   setUser(null)
-  // }
   const [isLogedIn, setIsLogedIn] = useState(false)
   const [isFullyLoaded, setIsFullyLoaded] = useState(false) // in order to make app.js working with the updated isLogedIn
 

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useContext} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import RecipesDataService from "../services/recipes";
 import {Link, useParams} from "react-router-dom";
 import { FcLike, FcLikePlaceholder } from "react-icons/fc";
@@ -108,10 +108,6 @@ const Recipe = props => {
       });
   };
 
-   const onDeleteRecipeClick = async () => {
-   await RecipesDataService.deleteRecipe(recipeIdParam, recipesContext.id);
-  }
-
   const onAddToFavoritesClick = async () => {
     let favArray = user.favorites;
     let favArrayStringIds = favArray.map(fav => fav.$oid);
@@ -145,18 +141,14 @@ const Recipe = props => {
   }
 
   if(isLoading) return (    
-      <Loader/>
-   )
+    <Loader/>
+ )
   return (
     <div>
       {recipe ? (
         <div>
-          <h5 className="align-center">{recipe.name}</h5>
-          <p>
-          <img src={recipe.image || defaultImg.img} className="card-img-top contain-img" />
-          </p>
           <div className="items-in-row align-center">
-            <strong>Cuisine: </strong> {recipe.cuisine}<br/>
+          <h3>{recipe.name}</h3>
           {recipesContext.user && recipesContext.user.id !== recipe.userId &&
               <div> 
                 {user.favorites.map(fav => fav.$oid).indexOf(recipeIdParam) === -1 ?
@@ -167,6 +159,17 @@ const Recipe = props => {
               </div>
              }
           </div>
+          <p>
+          <img src={recipe.image || defaultImg.img} className="card-img-top contain-img" alt="n/a" />
+          </p>
+   
+          <p className="items-in-row align-center">
+          <strong>By: </strong> &nbsp; {recipeOwnerName}
+          </p>
+          <div className="items-in-row align-center">
+            <strong>Cuisine: </strong> &nbsp; {recipe.cuisine}<br/>
+          </div>
+
           <div className="align-center" style={{"marginTop": "7px"}}>
             <StarRatings
               rating={totalRating}
@@ -179,11 +182,12 @@ const Recipe = props => {
           rating reviewers: {totalUsersRatingCount}
           </div>
 
-                       <h4>ingrediens</h4>
-             <div className="results"> 
+          <div className="section">
+            <h4 className="align-center">ingrediens</h4>
+             <div className=" align-center results"> 
             <ul>
               {recipe.ingrediens.map((item, index) => (
-                <div> 
+                <div key={item}> 
                   <li onClick={() => {ingredientChecked(index)}} id={index} className="ingredient-item">
                   {" "}
                   {item}
@@ -193,19 +197,15 @@ const Recipe = props => {
               ))}
             </ul>
           </div>
-          
-          <h4>instructions</h4>
+          </div>
+
+        <div className="section">
+          <h4 className="align-center">instructions</h4>
           <div className="instructions-text results">
             {recipe.instructions}
           </div>
-          <div>
-          { recipesContext && recipesContext.id === recipe.userId &&
-             <button onClick={onDeleteRecipeClick} className="btn btn-danger">Delete Recipe</button>
-             }
-             </div>
-          <div className="results">
-          
           </div>
+
           {recipesContext.user &&
           <div style={{marginBottom: "10px"}} className="items-in-row">
             <span style={{marginRight: "10px", marginTop:"10px"}}>set your rating: </span>

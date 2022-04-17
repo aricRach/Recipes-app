@@ -118,13 +118,14 @@ button {
 }
 
 ul {
-  columns: 2;
-  -webkit-columns: 2;
-  -moz-columns: 2;
+  columns: 3;
+  -webkit-columns: 3;
+  -moz-columns: 3;
 }
 
 li {
   margin-top: 5px;
+  margin-left: 2rem;
 }
 
 label {
@@ -212,6 +213,14 @@ label {
 
 .review-card {
   height: 160px;
+}
+
+.section {
+  margin-top: 1.7rem;
+}
+
+.add-ingredients {
+  margin-right: 15rem !important;
 }
 
 @media only screen and (max-width: 800px) {

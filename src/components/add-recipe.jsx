@@ -25,19 +25,22 @@ const AddRecipe = props => {
     const [recipe, setRecipe] = useState(initialRecipeState);
     const [editing, setEditing] = useState(false);
     const [submitted, setSubmitted] = useState(false);
-    const [isLoading,setIsLoading] = useState(false)
+    const [inProgress, setInProgress] = useState(false);
+
 
     useEffect(() => {
+      setInProgress(false);
       recipesContext.readCookie();
       recipesContext.retrieveCuisines();
       if (location.state && location.state.currentRecipe) {
         setEditing(true);
         setRecipe(location.state.currentRecipe);
       }
+      recipesContext.setIsLoading(false);
     }, []);
 
     const handleAddIngredients = () => {
-      if(inputIngrediens.current.value != "") {
+      if(inputIngrediens.current.value != "" && recipe.ingrediens.indexOf(inputIngrediens.current.value) === -1) {
         setRecipe({...recipe, ingrediens: [...recipe.ingrediens, inputIngrediens.current.value]});
       }
       inputIngrediens.current.value = "";
@@ -74,7 +77,7 @@ const AddRecipe = props => {
     }
 
     const onSaveClick = async (event) => {
-      setIsLoading(true);
+      setInProgress(true);
         event.preventDefault(); // prevent reload the page
         var data = {
             name: recipe.name,
@@ -95,18 +98,16 @@ const AddRecipe = props => {
           if (editing) {
             data.recipeId = location.state.currentRecipe._id;
             await RecipesDataService.updateRecipe(data);
-            setIsLoading(false);
             setSubmitted(true);
           } else {
               await RecipesDataService.createRecipe(data)
-              setIsLoading(false);
               setSubmitted(true);
               }
           };
     
     const onDeleteClick = () => {
+      setInProgress(true);
         const recipeId = location.state.currentRecipe._id;
-
         RecipesDataService.deleteRecipe(recipeId, recipesContext.user.id)
         .then(response => {
           setSubmitted(true);
@@ -117,7 +118,7 @@ const AddRecipe = props => {
 
     };
 
-    if(isLoading) return (    
+    if(recipesContext.isLoading) return (    
       <Loader/>
    )
     return (
@@ -128,7 +129,7 @@ const AddRecipe = props => {
                 <form onSubmit={onSaveClick} >
                     <label htmlFor="inputName">name</label>
                     <div className="input-group col-lg-4">
-                    <input maxLength={24} autocomplete="off" required className="form-control" defaultValue={recipe.name} id="inputName" type="text" onChange={nameChangeHandler} />
+                    <input maxLength={24} autoComplete="off" required className="form-control" defaultValue={recipe.name} id="inputName" type="text" onChange={nameChangeHandler} />
                     </div>
 
                     <label htmlFor="ingrediens">Ingrediens</label>
@@ -145,10 +146,10 @@ const AddRecipe = props => {
                     </button>
                    </div>
 
-             <div className="results"> 
-            <ul>
+             <div className="results align-center"> 
+            <ul className="add-ingredients">
               {recipe.ingrediens.map((item) => (
-                <div> 
+                <div key={item}> 
                   <li className="ingredient-item">
                   {" "}
                   {item}
@@ -167,11 +168,11 @@ const AddRecipe = props => {
 
                     <label htmlFor="cuisine">cuisine(choose from the list or add a new cuisine)</label>
                     <div className="input-group col-lg-4">
-                    <input autocomplete="off" required defaultValue={recipe.cuisine} className="form-control" id="cuisine" type="text" onChange={cuisineChangeHandler} list="cuisinesList" />
+                    <input autoComplete="off" required defaultValue={recipe.cuisine} className="form-control" id="cuisine" type="text" onChange={cuisineChangeHandler} list="cuisinesList" />
                     <datalist id="cuisinesList">
-                    {recipesContext.cuisines.slice(1).map(cuisine => {
+                    {recipesContext.cuisines.slice(1).map((cuisine, index) => {
                       return (
-                        <option value={cuisine}> {cuisine.substr(0, 20)} </option>
+                        <option key={index} value={cuisine}> {cuisine.substr(0, 20)} </option>
                       )
                     })}
                     </datalist>
@@ -191,14 +192,14 @@ const AddRecipe = props => {
                     multiple={false}
                     onDone={({base64}) => setImage(base64)}/>
                     <p>
-                    <img src={recipe.image} className="img-thumbnail" style={{"max-height": "350px"}} />
+                    <img src={recipe.image} className="img-thumbnail" style={{"maxHeight": "350px"}} alt="n/a" />
                     </p>
                     </div>
 
                     <div className="input-group col-lg-4">
                     <div className="items-in-row">
-                    <button type="submit" className="btn btn-success submit">Submit</button>
-                    { editing && <div><button onClick={onDeleteClick} className="btn btn-danger">delete</button></div>}
+                    <button type="submit" disabled={inProgress} className="btn btn-success submit">Submit</button>
+                    { editing && <div><button disabled={inProgress} onClick={onDeleteClick} className="btn btn-danger">delete</button></div>}
                     </div>
                     </div>
                 </form>

@@ -1,7 +1,7 @@
 import React, {useContext, useState} from "react";
 import RecipesDataService from "../services/recipes";
-import {Link, useLocation, useParams} from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import {RecipesContext} from "../store/recipes-context";
 
 const AddReview = props => {

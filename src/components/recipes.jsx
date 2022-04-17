@@ -16,19 +16,22 @@ const Recipes = props => {
     if (location.state && location.state.currentRecipe) {
       recipesContext.setRecipes(location.state.currentRecipe);
       setIsLoading(false);
+      recipesContext.setIsLoading(false);
     } else{
       recipesContext.retrieveRecipes().then(response => {
         recipesContext.setRecipes(response.data.recipes);
         setIsLoading(false);
+        recipesContext.setIsLoading(false);
       })
       .catch(e => {
         console.log(e);
         setIsLoading(false);
+        recipesContext.setIsLoading(false);
       });;
     }
     recipesContext.readCookie();
     recipesContext.retrieveCuisines();
-  },[]);
+  }, []);
 
   const onChangeSearchName = e => {
     const searchName = e.target.value;
@@ -66,9 +69,9 @@ const Recipes = props => {
     return recipe._id.$oid ? recipe._id.$oid : recipe._id;
   }
 
-  if(isLoading) return (    
-      <Loader/>
-  )
+  if(isLoading || recipesContext.isLoading) return (    
+    <Loader/>
+)
   return (
     <div>    
         <div className="input-group col-lg-4">
@@ -93,9 +96,9 @@ const Recipes = props => {
         <div className="input-group col-lg-4 cousine-search" >
 
           <select onChange={onChangeSearchCuisine}>
-             {recipesContext.cuisines.map(cuisine => {
+             {recipesContext.cuisines.map((cuisine , index)=> {
                return (
-                 <option value={cuisine}> {cuisine.substr(0, 20)} </option>
+                 <option key={index} value={cuisine}> {cuisine.substr(0, 20)} </option>
                )
              })}
           </select>
@@ -118,7 +121,7 @@ const Recipes = props => {
                 <div className="card-body">
                   <h5 className="card-title">{recipe.name}</h5>
                   <h6 className="card-subtitle mb-2 text-muted"><strong>Cuisine: </strong>{recipe.cuisine}</h6>
-                  <img src={recipe.image || defaultImg.img} className="card-img-top cover-img" />
+                  <img src={recipe.image || defaultImg.img} className="card-img-top cover-img" alt="n/a" />
                   <div>
                   <Link className="card-link btn btn-primary col-lg-5 recipe-page-btn" to={"/recipes/"+ getId(recipe)}>
                     recipe page
