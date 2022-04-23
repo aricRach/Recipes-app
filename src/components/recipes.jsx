@@ -148,7 +148,7 @@ const Recipes = props => {
         <div className="not-found-icon"><AiOutlineZoomOut/></div>
         <div className="line"></div>
         </div>
-          <div class="icon-empty-message">No available recipes were found</div>
+          <div className="icon-empty-message">No available recipes were found</div>
           </div>
         )}
     </div>

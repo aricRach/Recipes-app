@@ -110,12 +110,12 @@ const Recipe = props => {
 
   const onAddToFavoritesClick = async () => {
     let favArray = user.favorites;
-    let favArrayStringIds = favArray.map(fav => fav.$oid);
+    let favArrayStringIds = favArray.map(fav => fav?.$oid);
     const idOfCurrentRecipe = {$oid: recipeIdParam}; // convert to objectId
     if(favArrayStringIds.indexOf(idOfCurrentRecipe.$oid) === -1) {
       favArray.push(idOfCurrentRecipe);
     } else{
-      favArray = favArrayStringIds.filter(currentRecipeId => currentRecipeId != idOfCurrentRecipe.$oid);
+      favArray = favArray.filter(currentRecipeId => currentRecipeId?.$oid != idOfCurrentRecipe.$oid);
     }
      setUser({...user, favorites: [...favArray]});
        await RecipesDataService.updateFavorites({
@@ -149,9 +149,16 @@ const Recipe = props => {
         <div>
           <div className="items-in-row align-center">
           <h3>{recipe.name}</h3>
+          </div>
+          <div className="container">
+          <img src={recipe.image || defaultImg.img} className="card-img-top contain-img" alt="n/a"/>
+          </div>
+   
+          <div className="items-in-row align-center">
+          <strong>By: </strong> &nbsp; {recipeOwnerName}
           {recipesContext.user && recipesContext.user.id !== recipe.userId &&
               <div> 
-                {user.favorites.map(fav => fav.$oid).indexOf(recipeIdParam) === -1 ?
+                {user.favorites.map(fav => fav?.$oid).indexOf(recipeIdParam) === -1 ?
                                 <div className="like-btn" onClick={onAddToFavoritesClick}><FcLikePlaceholder/></div> : 
                                 <div className="like-btn" onClick={onAddToFavoritesClick}><FcLike/></div>
 
@@ -159,13 +166,6 @@ const Recipe = props => {
               </div>
              }
           </div>
-          <p>
-          <img src={recipe.image || defaultImg.img} className="card-img-top contain-img" alt="n/a" />
-          </p>
-   
-          <p className="items-in-row align-center">
-          <strong>By: </strong> &nbsp; {recipeOwnerName}
-          </p>
           <div className="items-in-row align-center">
             <strong>Cuisine: </strong> &nbsp; {recipe.cuisine}<br/>
           </div>

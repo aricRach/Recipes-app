@@ -6,7 +6,6 @@ class RecipesDataService {
   }
 
   get(id) {
-    // return http.get(`/recipes/id/${id}`);//ar insead of /recipe/id=${id}
     return http.get(`/recipe?id=${id}`);
   }
 
