@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import '.././App.css';
 
 import {RecipesContext} from '../store/recipes-context';
@@ -9,7 +9,26 @@ import {ButtonGroup} from 'react-bootstrap';
 
 const Header = props => {
 
-    const recipesContext = useContext(RecipesContext); 
+    const recipesContext = useContext(RecipesContext);
+    const location = useLocation();
+
+    const searchFavorites = () => {
+      recipesContext.setIsLoading(true);
+      recipesContext.setPage(0);
+      recipesContext.searchFavoritesRecipes(0).then(results => {
+        recipesContext.setRecipes(results.data);
+        recipesContext.setIsLoading(false);
+        });
+    }
+
+    const searchMyRecipes = () => {
+      recipesContext.setIsLoading(true);
+      recipesContext.setPage(0);
+      recipesContext.searchMyRecipes(0).then(results => {
+        recipesContext.setRecipes(results.data.recipes);
+        recipesContext.setIsLoading(false);
+        });
+    }
 
     return (
     <div>
@@ -50,20 +69,16 @@ const Header = props => {
               add recipe
             </Dropdown.Item>
 
-            <Dropdown.Item as={Link} onClick={recipesContext.searchFavoritesRecipes} to="/"
-                              state = {{
-                                currentRecipe: recipesContext.recipes
-                              }}
-                            >
+            <Dropdown.Item as={Link} onClick={searchFavorites} to="/"
+                           state = {location.pathname !== '/' ? {resetRecipes: false} : null}
+                           >
               my favorites recipes
             </Dropdown.Item>
 
-            <Dropdown.Item as={Link} onClick={recipesContext.searchMyRecipes} to="/"
-                           state = {{
-                               currentRecipe: recipesContext.recipes
-                           }}
+            <Dropdown.Item as={Link} onClick={searchMyRecipes} to="/"
+                           state = {location.pathname !== '/' ? {resetRecipes: false} : null}
             >
-                              search my recipe
+                              search my recipes
             </Dropdown.Item>
             
             <Dropdown.Divider></Dropdown.Divider>

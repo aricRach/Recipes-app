@@ -58,8 +58,8 @@ class RecipesDataService {
     return http.get(`recipes?${by}=${query}&page=${page}`);
   } 
 
-  findFavorites(id) { // to write
-    return http.get(`/favorites?id=${id}`);
+  findFavorites(id, page) { // to write
+    return http.get(`/favorites?id=${id}&page=${page}`);
   } 
 
   getUser(id) {

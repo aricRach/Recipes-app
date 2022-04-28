@@ -9,15 +9,19 @@ import Loader from "./loader";
 
 const Recipes = props => {
   const [isLoading,setIsLoading] = useState(true)
+  const [mainSearchName,setMainSearchName] = useState('')
+  const [mainSearchCusine,setmainSearchCusine] = useState('All Cuisines')
+  const [triggerPageChange,setTriggerPageChange] = useState(false);
+
   const recipesContext = useContext(RecipesContext);
   const location = useLocation();
 
   useEffect(() => {
-    if (location.state && location.state.currentRecipe) {
-      recipesContext.setRecipes(location.state.currentRecipe);
+    if (location.state && !location.state.resetRecipes) {
       setIsLoading(false);
-      recipesContext.setIsLoading(false);
-    } else{
+      window.history.replaceState({}, document.title)
+    } else {
+      setIsLoading(true);
       recipesContext.retrieveRecipes().then(response => {
         recipesContext.setRecipes(response.data.recipes);
         setIsLoading(false);
@@ -33,19 +37,37 @@ const Recipes = props => {
     recipesContext.retrieveCuisines();
   }, []);
 
+  useEffect(() => {
+    if(triggerPageChange) {
+      console.log(recipesContext.page)
+      setIsLoading(true);
+        recipesContext[recipesContext.lastSearch.name](recipesContext.lastSearch.searchValue).then(response => {
+        recipesContext.setRecipes(response.data.recipes ? response.data.recipes : response.data);
+        setIsLoading(false);
+        recipesContext.setIsLoading(false);
+      })
+      .catch(e => {
+        console.log(e);
+        setIsLoading(false);
+        recipesContext.setIsLoading(false);
+      });;
+    }
+  }, [recipesContext.page]);
+
   const onChangeSearchName = e => {
-    const searchName = e.target.value;
-    recipesContext.setSearchNameInput(searchName);
+    setMainSearchName(e.target.value);
   };
 
   const onChangeSearchCuisine = e => {
-    const searchCuisine = e.target.value;
-    recipesContext.setSearchCuisineInput(searchCuisine);
+    setmainSearchCusine(e.target.value);
   };
 
   const findByName = () => {
+    setTriggerPageChange(false);
+    recipesContext.setPage(0);
     setIsLoading(true);
-    recipesContext.findByName().then(response => {
+    recipesContext.setLastSearch({name: 'findByName', searchValue: mainSearchName});
+    recipesContext.findByName(mainSearchName, 0).then(response => {
         recipesContext.setRecipes(response.data.recipes);
         setIsLoading(false);
       })
@@ -55,8 +77,12 @@ const Recipes = props => {
   }
 
   const findByCuisine = () => {
+    setTriggerPageChange(false);
+    recipesContext.setPage(0);
     setIsLoading(true);
-    recipesContext.findByCuisine().then(response => {
+    setMainSearchName('');
+    recipesContext.setLastSearch({name: 'findByCuisine', searchValue: mainSearchCusine});
+    recipesContext.findByCuisine(mainSearchCusine, 0).then(response => {
       recipesContext.setRecipes(response.data.recipes);
       setIsLoading(false);
     }) 
@@ -69,17 +95,30 @@ const Recipes = props => {
     return recipe._id.$oid ? recipe._id.$oid : recipe._id;
   }
 
+  const nextPage = () => {
+    setTriggerPageChange(true);
+    recipesContext.setPage(recipesContext.page+1);
+  }
+  const prevPage = () => {
+    setTriggerPageChange(true);
+    recipesContext.setPage(recipesContext.page > 0 ? recipesContext.page-1 : 0);
+  }
+
   if(isLoading || recipesContext.isLoading) return (    
     <Loader/>
 )
   return (
-    <div>    
+    <div>
+      {recipesContext.page}    
+      <button onClick={nextPage}>next</button>
+      <button onClick={prevPage}>prev</button>
+
         <div className="input-group col-lg-4">
           <input
             type="text"
             className="form-control input"
             placeholder="Search by name"
-            value={recipesContext.searchName}
+            value={mainSearchName}
             onChange={onChangeSearchName}
           />
           <div className="input-group-append">

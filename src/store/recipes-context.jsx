@@ -14,9 +14,10 @@ const navigate = useNavigate();
 
   const [recipes, setRecipes] = useState([]);
   const [cuisines, setCuisines] = useState(["All Cuisines"]);
-  const [searchName, setSearchName ] = useState("");
-  const [searchCuisine, setSearchCuisine ] = useState("");
-  const [isLoading,setIsLoading] = useState(true)
+  const [isLoading,setIsLoading] = useState(false)
+  const [page,setPage] = useState(0)
+  const [lastSearch,setLastSearch] = useState({name: 'retrieveRecipes'})
+
 
   // user contex
   const [user, setUser] = useState(null);
@@ -66,23 +67,18 @@ const navigate = useNavigate();
     navigate('/');
   }
 // end user contex
-  const searchMyRecipes = () => {
-    setIsLoading(true);
-      RecipesDataService.findMyRecipes(user.id, 'id').then(results => {
-        setRecipes(results.data.recipes);
-        setIsLoading(false);
-      });
+  const searchMyRecipes = (searchPage) => {
+    setLastSearch({name: 'searchMyRecipes'});
+    return RecipesDataService.findMyRecipes(user.id, 'id', searchPage != null ? searchPage : page);
   };
-  const searchFavoritesRecipes = () => {
-    setIsLoading(true);
-    RecipesDataService.findFavorites(user.id).then(results => {
-      setRecipes(results.data);
-      setIsLoading(false);
-    });
+
+  const searchFavoritesRecipes = (searchPage) => {
+    setLastSearch({name: 'searchFavoritesRecipes'});
+    return RecipesDataService.findFavorites(user.id, searchPage != null ? searchPage : page);
 };
 
   const retrieveRecipes = () => {
-      return RecipesDataService.getAll();
+      return RecipesDataService.getAll(page);
   }
 
   const retrieveCuisines = () => {
@@ -95,31 +91,19 @@ const navigate = useNavigate();
       });
   };
 
-  const find = (query, by) => {
-    return RecipesDataService.find(query, by);
+  const find = (query, by, page = 0) => {
+    return RecipesDataService.find(query, by, page);
   };
 
-  const setSearchNameInput = searchNameInput => {
-    setSearchName(searchNameInput);
-  }
-
-  const setSearchCuisineInput = searchCuisineInput => {
-    setSearchCuisine(searchCuisineInput);
-  }
-
-  const findByName = () => {
-    const searchThisText = searchName;
-    setSearchName('');
-    return find(searchThisText, "name")
+  const findByName = (nameToSearch, searchPage) => {
+    return find(nameToSearch, "name", searchPage != null ? searchPage : page)
   };
 
-  const findByCuisine = () => {
-    if (searchCuisine === "All Cuisines") {
+  const findByCuisine = (cuisineToSearch, searchPage) => {
+    if (cuisineToSearch === "All Cuisines") {
       return RecipesDataService.getAll();
     } else {
-      const searchThisCuisine = searchCuisine;
-      setSearchCuisine("All Cuisines");
-      return find(searchThisCuisine, "cuisine");
+      return find(cuisineToSearch, "cuisine", searchPage != null ? searchPage : page);
     }
   };
 
@@ -132,11 +116,13 @@ const navigate = useNavigate();
     retrieveCuisines: retrieveCuisines,
     findByName: findByName,
     findByCuisine: findByCuisine,
-    setSearchNameInput:setSearchNameInput,
-    setSearchCuisineInput:setSearchCuisineInput,
     searchFavoritesRecipes: searchFavoritesRecipes,
     isLoading: isLoading,
     setIsLoading:setIsLoading,
+    page: page,
+    setPage: setPage,
+    lastSearch:lastSearch,
+    setLastSearch:setLastSearch,
     //
     user: user,
     login:login,
