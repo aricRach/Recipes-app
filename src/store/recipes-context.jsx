@@ -14,9 +14,10 @@ const navigate = useNavigate();
 
   const [recipes, setRecipes] = useState([]);
   const [cuisines, setCuisines] = useState(["All Cuisines"]);
-  const [isLoading,setIsLoading] = useState(false)
-  const [page,setPage] = useState(0)
-  const [lastSearch,setLastSearch] = useState({name: 'retrieveRecipes'})
+  const [isLoading,setIsLoading] = useState(false);
+  const [page,setPage] = useState(0);
+  const [totalPages,setTotalPages] = useState(0);
+  const [lastSearch,setLastSearch] = useState({name: 'retrieveRecipes'});
 
 
   // user contex
@@ -121,6 +122,8 @@ const navigate = useNavigate();
     setIsLoading:setIsLoading,
     page: page,
     setPage: setPage,
+    totalPages: totalPages,
+    setTotalPages: setTotalPages,
     lastSearch:lastSearch,
     setLastSearch:setLastSearch,
     //
@@ -129,8 +132,6 @@ const navigate = useNavigate();
     signUp:signUp,
     logout: logout,
     readCookie:readCookie
-
-    //
   }
 
     return (

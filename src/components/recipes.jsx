@@ -5,7 +5,10 @@ import '.././App.css';
 import {RecipesContext} from '../store/recipes-context';
 import defaultImg from '../assets/defaultImg.json';
 import Loader from "./loader";
+import Pagination from '@mui/material/Pagination';
 
+
+const itemsPerPage = 6;
 
 const Recipes = props => {
   const [isLoading,setIsLoading] = useState(true)
@@ -22,8 +25,11 @@ const Recipes = props => {
       window.history.replaceState({}, document.title)
     } else {
       setIsLoading(true);
+       // if reload the page, set the initial searching method in order to align the paginator pageChange searching method
+      recipesContext.setLastSearch({name: 'findByName', searchValue: ''});
       recipesContext.retrieveRecipes().then(response => {
         recipesContext.setRecipes(response.data.recipes);
+        recipesContext.setTotalPages(Math.ceil(+response.data.total_results/itemsPerPage));
         setIsLoading(false);
         recipesContext.setIsLoading(false);
       })
@@ -69,6 +75,7 @@ const Recipes = props => {
     recipesContext.setLastSearch({name: 'findByName', searchValue: mainSearchName});
     recipesContext.findByName(mainSearchName, 0).then(response => {
         recipesContext.setRecipes(response.data.recipes);
+        recipesContext.setTotalPages(Math.ceil(+response.data.total_results/itemsPerPage));
         setIsLoading(false);
       })
       .catch(e => {
@@ -84,6 +91,7 @@ const Recipes = props => {
     recipesContext.setLastSearch({name: 'findByCuisine', searchValue: mainSearchCusine});
     recipesContext.findByCuisine(mainSearchCusine, 0).then(response => {
       recipesContext.setRecipes(response.data.recipes);
+      recipesContext.setTotalPages(Math.ceil(+response.data.total_results/itemsPerPage));
       setIsLoading(false);
     }) 
     .catch(e => {
@@ -95,13 +103,9 @@ const Recipes = props => {
     return recipe._id.$oid ? recipe._id.$oid : recipe._id;
   }
 
-  const nextPage = () => {
+  const onPageChanged = (event, value) => {
     setTriggerPageChange(true);
-    recipesContext.setPage(recipesContext.page+1);
-  }
-  const prevPage = () => {
-    setTriggerPageChange(true);
-    recipesContext.setPage(recipesContext.page > 0 ? recipesContext.page-1 : 0);
+    recipesContext.setPage(value - 1);
   }
 
   if(isLoading || recipesContext.isLoading) return (    
@@ -109,10 +113,6 @@ const Recipes = props => {
 )
   return (
     <div>
-      {recipesContext.page}    
-      <button onClick={nextPage}>next</button>
-      <button onClick={prevPage}>prev</button>
-
         <div className="input-group col-lg-4">
           <input
             type="text"
@@ -179,8 +179,8 @@ const Recipes = props => {
           );
         })}
               </div>
-
-        {recipesContext.recipes.length === 0 && (
+            
+        {recipesContext.recipes.length === 0 ? (
           <div>
         <div className="not-found-icon-container">
         <div className="line"></div>
@@ -189,7 +189,10 @@ const Recipes = props => {
         </div>
           <div className="icon-empty-message">No available recipes were found</div>
           </div>
-        )}
+        ) : 
+        <Pagination className="align-center" style={{lineHeight: "3"}} color="primary"
+        count={recipesContext.totalPages} page={recipesContext.page + 1} onChange={onPageChanged} />
+        }
     </div>
   );
 };

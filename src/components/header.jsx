@@ -7,28 +7,22 @@ import { FcBusinessman } from "react-icons/fc";
 import {Dropdown} from 'react-bootstrap';
 import {ButtonGroup} from 'react-bootstrap';
 
+const itemsPerPage = 6;
+
 const Header = props => {
 
     const recipesContext = useContext(RecipesContext);
     const location = useLocation();
 
-    const searchFavorites = () => {
+    const setRecipes = ((contextFun) => {
       recipesContext.setIsLoading(true);
       recipesContext.setPage(0);
-      recipesContext.searchFavoritesRecipes(0).then(results => {
-        recipesContext.setRecipes(results.data);
-        recipesContext.setIsLoading(false);
-        });
-    }
-
-    const searchMyRecipes = () => {
-      recipesContext.setIsLoading(true);
-      recipesContext.setPage(0);
-      recipesContext.searchMyRecipes(0).then(results => {
+      recipesContext[contextFun](0).then(results => {
         recipesContext.setRecipes(results.data.recipes);
+        recipesContext.setTotalPages(Math.ceil(+results.data.total_results/itemsPerPage));
         recipesContext.setIsLoading(false);
         });
-    }
+    })
 
     return (
     <div>
@@ -69,13 +63,13 @@ const Header = props => {
               add recipe
             </Dropdown.Item>
 
-            <Dropdown.Item as={Link} onClick={searchFavorites} to="/"
+            <Dropdown.Item as={Link} onClick={ () => {setRecipes('searchFavoritesRecipes')}} to="/"
                            state = {location.pathname !== '/' ? {resetRecipes: false} : null}
                            >
               my favorites recipes
             </Dropdown.Item>
 
-            <Dropdown.Item as={Link} onClick={searchMyRecipes} to="/"
+            <Dropdown.Item as={Link} onClick={ () => {setRecipes('searchMyRecipes')}} to="/"
                            state = {location.pathname !== '/' ? {resetRecipes: false} : null}
             >
                               search my recipes
