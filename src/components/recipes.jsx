@@ -5,8 +5,7 @@ import '.././App.css';
 import {RecipesContext} from '../store/recipes-context';
 import defaultImg from '../assets/defaultImg.json';
 import Loader from "./loader";
-import Pagination from '@mui/material/Pagination';
-
+import Paginator from "./paginator"
 
 const itemsPerPage = 6;
 
@@ -20,7 +19,7 @@ const Recipes = props => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.state && !location.state.resetRecipes) {
+    if (location.state && !location.state.resetRecipes) { // we already load the required recipes in fav or my own recipes
       setIsLoading(false);
       window.history.replaceState({}, document.title)
     } else {
@@ -104,6 +103,7 @@ const Recipes = props => {
   }
 
   const onPageChanged = (event, value) => {
+    event.preventDefault();
     setTriggerPageChange(true);
     recipesContext.setPage(value - 1);
   }
@@ -162,7 +162,7 @@ const Recipes = props => {
                   <h6 className="card-subtitle mb-2 text-muted"><strong>Cuisine: </strong>{recipe.cuisine}</h6>
                   <img src={recipe.image || defaultImg.img} className="card-img-top cover-img" alt="n/a" />
                   <div>
-                  <Link className="card-link btn btn-primary col-lg-5 recipe-page-btn" to={"/recipes/"+ getId(recipe)}>
+                  <Link className="card-link btn btn-primary col-lg-5 space-top" to={"/recipes/"+ getId(recipe)}>
                     recipe page
                   </Link>
                   {recipesContext.user && recipesContext.user.id === recipe.userId &&
@@ -190,8 +190,8 @@ const Recipes = props => {
           <div className="icon-empty-message">No available recipes were found</div>
           </div>
         ) : 
-        <Pagination className="align-center" style={{lineHeight: "3"}} color="primary"
-        count={recipesContext.totalPages} page={recipesContext.page + 1} onChange={onPageChanged} />
+        <Paginator totalPages={recipesContext.totalPages}
+         onPageChange={onPageChanged} page={recipesContext.page+1}></Paginator>
         }
     </div>
   );

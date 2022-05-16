@@ -207,8 +207,10 @@ const Recipe = props => {
           </div>
 
           {recipesContext.user &&
+          <div className="section">
+          <div className="rating-message-small-screens"></div>
           <div style={{marginBottom: "10px"}} className="items-in-row">
-            <span style={{marginRight: "10px", marginTop:"10px"}}>set your rating: </span>
+            <span className="rating-message" style={{marginRight: "10px", marginTop:"10px"}}>set your rating: </span>
           <StarRatings
                           rating={userRating}
                           starRatedColor="#f7c600"
@@ -218,7 +220,10 @@ const Recipe = props => {
                           name='rating'
                         />
             </div>
-}
+            </div>
+        }
+
+        <div className="section">
           <div className="items-in-row">
           <h4 style={{marginRight: "5px"}}> Reviews </h4>
           <Link  style={{marginBottom: "5px"}} to={"/recipes/" + recipeIdParam + "/review"} className="btn btn-primary">
@@ -259,6 +264,7 @@ const Recipe = props => {
             )}
 
           </div>
+        </div>
 
         </div>
       ) : (
