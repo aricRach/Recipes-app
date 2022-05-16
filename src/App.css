@@ -76,8 +76,16 @@ button {
   justify-content: center;
 }
 
-.recipe-page-btn {
-  margin-top: 10px;
+.space-top {
+  margin-top: 1rem;
+}
+
+.circular-link-border {
+  border-radius: 30px !important;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 .edit-btn {
@@ -234,12 +242,31 @@ svg {
   margin-bottom: 5px;
 }
 
+.disabled {
+  color: currentColor;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
+  pointer-events: none;
+}
+
+
 @media only screen and (max-width: 800px) {
   ul {
     columns: 1;
     -webkit-columns: 1;
     -moz-columns: 1;
   }
+
+  .add-ingredients {
+    margin-right: 11rem !important;
+  }
+
+  .results {
+    width: 100%;
+  }
+
+
   /* ::-webkit-resizer {
     border: 2px solid black;
     background: red;
@@ -249,5 +276,15 @@ svg {
 
   textarea:focus {
     height: 400px;
+  }
+
+  .rating-message-small-screens:before {
+    content: "set your rating: ";
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .rating-message {
+    display: none;
   }
 }
