@@ -5,7 +5,6 @@ import { Route, Navigate } from "react-router-dom";
 import { Routes } from 'react-router-dom';
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 import AddReview from "./components/add-review";
 import Recipe from "./components/recipe";
