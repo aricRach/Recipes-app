@@ -1,6 +1,6 @@
 ## Recipes-app
 
- [Link to the site](https://recipes-rach-app.herokuapp.com/) 
+ [Link to the site](https://rach-recipes.netlify.app) 
 
 
 ### About The Project:
